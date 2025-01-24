@@ -26,15 +26,22 @@
 </head>
 
 <body>
-    <div id="touchpad"></div>
+    <div id="scroll">
+        <div id="touchpad"></div>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
     <script>
         const socket = io();
         const touchpad = document.getElementById('touchpad');
-        const mc = new Hammer(touchpad);
 
-        mc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+        let mc = new Hammer.Manager(touchpad)
+
+        mc.add(new Hammer.Pan({ direction: Hammer.DIRECTION_ALL }))
+        mc.add(new Hammer.Tap({ event: 'tap', pointers: 1 }))
+        mc.add(new Hammer.Tap({ event: 'righttap', pointers: 2, taps: 1 }))
+        mc.get('tap').requireFailure('righttap')
+        mc.add(new Hammer.Press({}))
 
         mc.on('panstart panmove', (ev) => {
             const touchData = {
@@ -45,8 +52,9 @@
                 deltaY: ev.deltaY
             };
             socket.emit('touch', touchData);
-        });
-
+        }).on('tap', (ev) => {
+            socket.emit('touch', { type: 'tap' });
+        })
     </script>
 </body>
 

@@ -1,0 +1,7 @@
+手机变成电脑触控板
+
+pnpm install
+
+pnpm dev
+
+启动后手机访问终端显示的ip:端口号，手机与电脑在同一 wifi 下

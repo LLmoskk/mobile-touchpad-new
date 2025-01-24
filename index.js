@@ -40,6 +40,8 @@ io.on('connection', (socket) => {
         // 更新初始位置和当前鼠标位置
         initialTouchPos = { x: data.x, y: data.y };
         currentMousePos = { x: newX, y: newY };
+      } else if (data.type === 'tap') {
+        await mouse.leftClick();
       }
     } catch (error) {
       console.error('Mouse control error:', error);
